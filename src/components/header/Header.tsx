@@ -21,8 +21,15 @@ const Header = () => {
           <div className="mt-3 flex h-20 items-center justify-between py-4 px-4 ">
             <div className="">
               <Link href="/">
-                <div className="h-20 w-20">
-                  <Logo color={"#000000"} className="h-full w-full" />
+                <div className="flex items-center">
+                  <div className="flex h-20 w-20 items-center justify-center">
+                    <Logo color={"#000000"} className="h-full w-full" />
+                  </div>
+                  <div className="ml-4">
+                    <h1 className="font-header' text-2xl font-medium">
+                      Good Doctor
+                    </h1>
+                  </div>
                 </div>
               </Link>
             </div>

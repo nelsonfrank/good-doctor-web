@@ -8,6 +8,8 @@ import type { AppType } from "next/app";
 import type { AppRouter } from "../server/router";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
