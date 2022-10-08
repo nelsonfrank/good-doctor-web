@@ -32,7 +32,7 @@ const UserRegistration = () => {
               This registration page is for individual, If you are doctor
               register{" "}
               <Link href="/auth/register/doctor">
-                <span className="text-blue-600">here</span>
+                <span className="cursor-pointer text-blue-600">here</span>
               </Link>
             </p>
           </div>
