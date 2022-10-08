@@ -153,7 +153,7 @@ const DoctorRegistration = () => {
                 Description
               </label>
               <textarea
-                placeholder="Describe what you do base on your specialization"
+                placeholder="Describe what you do based on your specialization"
                 className="mb-2 w-full rounded-md border border-gray-400 py-4 px-4  outline-none"
                 {...register("password", { required: true })}
               />
