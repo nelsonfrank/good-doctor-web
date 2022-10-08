@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Logo from "./logo";
 import { BiUser } from "react-icons/bi";
 
 const DashboardHeader = () => {

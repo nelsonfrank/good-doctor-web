@@ -39,7 +39,6 @@ const Layout = (props: LayoutProps) => {
           </div>
         </div>
 
-      <div>{props.children}</div>
     </>
   );
 };

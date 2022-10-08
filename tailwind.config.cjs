@@ -16,6 +16,10 @@ module.exports = {
         },
         overlay: "rgba(0,0,0, 0.3)",
         "overlay-hard": "rgba(0,0,0, 0.85)",
+        active: "#CDFFCD",
+        "active-deep": "#007F00",
+        inactive: "#FFECCC",
+        "inactive-deep": "#965E00",
       },
       fontFamily: {
         header: [

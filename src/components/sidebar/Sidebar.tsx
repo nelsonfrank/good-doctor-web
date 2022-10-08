@@ -24,29 +24,12 @@ const Sidebar = () => {
 
       <div className="sidebar-scrollbar grow overflow-y-auto bg-gray-200">
         {sidebarMenu.map((menu) => {
-          if (
-            menu.name === "Users" ||
-            menu.name === "Setup" ||
-            menu.name === "Invoices" ||
-            menu.name === "Users"
-          ) {
-            return (
-              <SidebarMenu
-                key={menu.name}
-                Icon={menu.Icon}
-                name={menu.name}
-                route={menu.route}
-                subMenu={menu.subMenu}
-              />
-            );
-          }
           return (
             <SidebarMenu
               key={menu.name}
               Icon={menu.Icon}
               name={menu.name}
               route={menu.route}
-              subMenu={menu.subMenu}
             />
           );
         })}
