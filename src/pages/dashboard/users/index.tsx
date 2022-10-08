@@ -1,5 +1,6 @@
 import React from "react";
 import { createColumnHelper } from "@tanstack/react-table";
+import ReactTooltip from "react-tooltip";
 
 import Layout from "@/src/components/layout";
 import Table from "@/src/components/table";
@@ -104,6 +105,7 @@ const columns = [
           <div data-tip="Delete" onClick={() => handleDeleteUser(id)}>
             <RiDeleteBin6Line className="text-xl text-red-500" />
           </div>
+          <ReactTooltip place="bottom" type="dark" />
         </div>
       );
     },
