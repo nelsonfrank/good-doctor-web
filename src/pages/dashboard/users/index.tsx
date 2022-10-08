@@ -88,19 +88,20 @@ const columns = [
       const status = info.row.getValue("status");
       return (
         <div className="flex justify-center gap-6">
-          <div>
+          <div data-tip="View">
             <GrFormView className="text-xl text-gray-500" />
           </div>
+
           {status !== "active" ? (
-            <div>
+            <div data-tip="Activate">
               <TbUserCheck className="text-xl text-gray-500" />
             </div>
           ) : (
-            <div>
+            <div data-tip="Deactivate">
               <TbUserOff className="text-xl text-gray-500" />
             </div>
           )}
-          <div onClick={() => handleDeleteUser(id)}>
+          <div data-tip="Delete" onClick={() => handleDeleteUser(id)}>
             <RiDeleteBin6Line className="text-xl text-red-500" />
           </div>
         </div>
