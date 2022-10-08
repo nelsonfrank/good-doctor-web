@@ -51,6 +51,10 @@ module.exports = {
           "Noto Color Emoji",
         ],
       },
+      gridTemplateColumns: {
+        // gallery image list
+        "cards-list": "repeat(auto-fit, minmax(300px, 1fr))",
+      },
     },
   },
   plugins: [],

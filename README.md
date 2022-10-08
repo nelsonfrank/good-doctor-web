@@ -48,3 +48,9 @@ You can also dockerize this stack and deploy a container. See the [Docker deploy
 Here are some resources that we commonly refer to:
 
 - [Protecting routes with Next-Auth.js](https://next-auth.js.org/configuration/nextjs#unstable_getserversession)
+
+
+# Design inspiration
+[Landing page by Rizki](https://dribbble.com/shots/19042614/attachments/14207167?mode=media)
+[Search page by DStudio ](https://dribbble.com/shots/19239139-Web-UI)
+[Card by Diana Palavandishvili ](https://dribbble.com/shots/15378958--Car-Rental-Search-Result-Page)

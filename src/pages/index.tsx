@@ -12,10 +12,12 @@ import { BiUser, BiSearch } from "react-icons/bi";
 // components
 import Header from "@/src/components/header";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
 
+  const router = useRouter();
   const path = "/img/home.jpg";
 
   interface Option {
@@ -155,7 +157,10 @@ const Home: NextPage = () => {
                 </div>
               </div>
               <div>
-                <button className="flex rounded-lg bg-purple-500 py-5 px-5 text-lg font-medium text-white">
+                <button
+                  className="flex rounded-lg bg-purple-500 py-5 px-5 text-lg font-medium text-white"
+                  onClick={() => router.push("/search")}
+                >
                   <BiSearch className="text-3xl font-thin" />
                   <span className="ml-2">Search</span>
                 </button>

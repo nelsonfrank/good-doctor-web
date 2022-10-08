@@ -36,12 +36,10 @@ const Header = () => {
 
             <ul className="hidden font-medium md:flex md:justify-between">
               <button className="mx-8 px-1 text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
-                {/* <Link href="/"> */}
-                Home
-                {/* </Link> */}
+                <Link href="/">Home</Link>
               </button>
               <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
-                <Link href="/">About Us</Link>
+                <Link href="/search">Search</Link>
               </button>
               <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
                 <Link href="/auth/register">Register</Link>
