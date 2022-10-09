@@ -22,4 +22,14 @@ export const userRouter = createProtectedRouter()
 
       return doctors;
     },
+  })
+  .query("byId", {
+    input: z.object({ id: z.string() }),
+    async resolve({ ctx, input }) {
+      const { id } = input;
+
+      return await ctx.prisma.user.findUnique({
+        where: { id },
+      });
+    },
   });

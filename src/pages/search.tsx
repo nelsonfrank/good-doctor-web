@@ -12,7 +12,6 @@ import { trpc } from "@/src/server/common/client/trpc";
 import { randomAvatarImg } from "../utils/Utils";
 import Popup from "reactjs-popup";
 import { useSession } from "next-auth/react";
-import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 
 const Search = () => {
