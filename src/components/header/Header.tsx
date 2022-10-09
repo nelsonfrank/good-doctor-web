@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import SideMenu from "./side-menu";
 import Logo from "./logo";
@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 const Header = () => {
   const [sideMenu, showSideMenu] = useState(false);
   const [loading, setIsLoading] = useState(false);
+  const [dashboardPath, setDashboardPath] = useState("");
 
   const closeSideMenu = (close: boolean) => {
     showSideMenu(close);
@@ -24,17 +25,31 @@ const Header = () => {
 
   const router = useRouter();
 
-  console.log(session);
+  useEffect(() => {
+    if (session && session.user) {
+      const user = session.user;
+      const redirectUrl =
+        user.role === "patient"
+          ? "individual"
+          : user.role === "doctor"
+          ? "doctor"
+          : "admin";
+      setDashboardPath(redirectUrl);
+    }
 
-  const handleSignout = () => {
-    setIsLoading(true);
-    signOut();
-    setIsLoading(false);
-  };
+    return () => {
+      setDashboardPath("individual");
+    };
+  }, [session]);
+    const handleSignout = () => {
+      setIsLoading(true);
+      signOut();
+      setIsLoading(false);
+    };
 
-  const handleNavigatToDashboard = () => {
-    router.push("/dashboard/individual");
-  };
+    const handleNavigatToDashboard = () => {
+      router.push(`/dashboard/${dashboardPath}`);
+    };
   return (
     <header>
       <section

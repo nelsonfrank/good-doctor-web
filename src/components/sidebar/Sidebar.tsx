@@ -2,10 +2,31 @@ import { sidebarMenuFn } from "./SidebarMenuList";
 import SidebarMenu from "./SidebarMenu";
 import Link from "next/link";
 import Logo from "../header/logo";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
-  const sidebarMenu = sidebarMenuFn();
+  const { data: session } = useSession();
+  const [dashboardPath, setDashboardPath] = useState("");
+  const sidebarMenu = sidebarMenuFn(dashboardPath);
   // const ability = useContext(AbilityContext);
+
+  useEffect(() => {
+    if (session && session.user) {
+      const user = session.user;
+      const redirectUrl =
+        user.role === "patient"
+          ? "individual"
+          : user.role === "doctor"
+          ? "doctor"
+          : "admin";
+      setDashboardPath(redirectUrl);
+    }
+
+    return () => {
+      setDashboardPath("individual");
+    };
+  }, [session]);
 
   return (
     <div className="sidebar-shadow flex h-full min-h-screen w-52 flex-col bg-gray-200 font-text text-gray-800">

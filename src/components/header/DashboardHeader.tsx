@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Popup from "reactjs-popup";
+import { useSession, signOut } from "next-auth/react";
 
 import { BiUser } from "react-icons/bi";
 import Spinner from "../spinner";
@@ -8,20 +9,41 @@ import { useRouter } from "next/router";
 
 const DashboardHeader = () => {
   const [loading, setLoading] = useState(false);
+  const [dashboardPath, setDashboardPath] = useState("");
+  const router = useRouter();
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (!session) {
+      router.push("/auth/login");
+    }
+    if (session && session.user) {
+      const user = session.user;
+      const redirectUrl =
+        user.role === "patient"
+          ? "individual"
+          : user.role === "doctor"
+          ? "doctor"
+          : "admin";
+      setDashboardPath(redirectUrl);
+    }
+
+    return () => {
+      setDashboardPath("individual");
+    };
+  }, [router, session]);
 
   const handleLogout = () => {
     setLoading(true);
-
     setTimeout(() => {
       setLoading(false);
+      signOut();
     }, 1000);
-    close();
   };
 
-  const router = useRouter();
   const navigateToDashboard = () => {
-    router.push("/dashboard/individual");
-    close();
+    router.push(`/dashboard/${dashboardPath}`);
   };
   return (
     <header>
@@ -31,9 +53,11 @@ const DashboardHeader = () => {
             <button className="mx-8 px-1 text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
               <Link href="/">Home</Link>
             </button>
-            <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
-              <Link href="/search">Search</Link>
-            </button>
+            {session?.user?.role !== "doctor" && (
+              <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
+                <Link href="/search">Search</Link>
+              </button>
+            )}
 
             <Popup
               trigger={

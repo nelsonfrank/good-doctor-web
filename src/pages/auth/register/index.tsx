@@ -40,8 +40,7 @@ const UserRegistration = () => {
           <div className="my-8">
             <h1 className="text-center text-2xl font-semibold">Sign up</h1>
             <p className="mt-8 text-center">
-              This registration page is for individual, If you are doctor
-              register{" "}
+              This registration page is for patient, If you are doctor register{" "}
               <Link href="/auth/register/doctor">
                 <span className="cursor-pointer text-blue-600">here</span>
               </Link>

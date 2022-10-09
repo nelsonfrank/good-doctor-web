@@ -5,7 +5,7 @@ import { verify } from "argon2";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
-import { loginSchema } from "../../../server/common/validation/auth";
+import { IUser, loginSchema } from "../../../server/common/validation/auth";
 // import { env } from "../../../env/server.mjs";
 
 export const authOptions: NextAuthOptions = {

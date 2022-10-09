@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Layout from "@/src/components/layout";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
+import { IUser } from "@/src/server/common/validation/auth";
 interface LoginFormType {
   email: string;
   password: string;
 }
 const Login = () => {
+  const router = useRouter();
+
   const [signinError, setSigninError] = useState<string | undefined>();
   const {
     register,
@@ -16,7 +18,21 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormType>();
 
-  const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user) {
+      const user = session.user as IUser;
+      const redirectUrl =
+        user.role === "patient"
+          ? "individual"
+          : user.role === "doctor"
+          ? "doctor"
+          : "admin";
+      router.replace(`/dashboard/${redirectUrl}`);
+    }
+  }, [router, session]);
+
   const onSubmit: SubmitHandler<LoginFormType> = async ({
     email,
     password,
@@ -31,7 +47,7 @@ const Login = () => {
     });
 
     if (res?.url) {
-      router.replace(res?.url);
+      console.log(res?.url);
     }
     if (res?.error) {
       setSigninError(res?.error);

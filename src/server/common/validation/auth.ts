@@ -18,9 +18,23 @@ export const doctorSignUpSchema = loginSchema.extend({
   description: z.string(),
 });
 
+
+export const userSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  dot: z.date(),
+  specialization: z.string(),
+  description: z.string(),
+  workPlace: z.string(),
+  role: z.string(),
+  status: z.string(),
+  image: z.string(),
+});
+
 export const signUpSchema = z.union([patientSignUpSchema, doctorSignUpSchema]);
 
 export type ILogin = z.infer<typeof loginSchema>;
 export type ISignUp = z.infer<typeof signUpSchema>;
 export type IDoctorSignUp = z.infer<typeof doctorSignUpSchema>;
 export type IPatientrSignUp = z.infer<typeof patientSignUpSchema>;
+export type IUser = z.infer<typeof userSchema>;
