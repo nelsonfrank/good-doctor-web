@@ -36,6 +36,7 @@ const Appointments = () => {
 
   const columnHelper = createColumnHelper<Appointment>();
 
+  const utils = trpc.useContext();
   const columns = (user: IUser) => [
     columnHelper.accessor("appointmentDate", {
       cell: (info) => <span>{formatDateString(info.getValue())}</span>,
@@ -102,20 +103,47 @@ const Appointments = () => {
         const id = info.getValue();
         const status = info.row.getValue("status");
         console.log(user);
-        const { mutateAsync } = trpc.useMutation(["appointment.delete"]);
+        const { mutateAsync } = trpc.useMutation(["appointment.delete"], {
+          onSuccess(input) {
+            utils.invalidateQueries(["appointment.all"]);
+            utils.invalidateQueries([
+              "appointment.byId",
+              { id: input.id, role: user.role },
+            ]);
+          },
+        });
 
+        const mut = trpc.useMutation(["appointment.update"], {
+          onSuccess(input) {
+            utils.invalidateQueries(["appointment.all"]);
+            utils.invalidateQueries([
+              "appointment.byId",
+              { id: input.id, role: user.role },
+            ]);
+          },
+        });
         const handleDeleteUser = (id: string) => {
           const deleteItem = mutateAsync({ id: String(id) });
           console.log(deleteItem);
+        };
+
+        const handleAcceptAppointment = () => {
+          const val = mut.mutateAsync({ id, status: "accepted" });
+          console.log(val);
+        };
+
+        const handleDenyAppointment = () => {
+          const res = mut.mutateAsync({ id, status: "denied" });
+          console.log(res);
         };
         return (
           <div className="flex justify-center gap-6">
             {user.role === "doctor" && (
               <>
-                <div data-tip="Accept">
+                <div data-tip="Accept" onClick={handleAcceptAppointment}>
                   <BsCheck2Square className="text-xl text-gray-600" />
                 </div>
-                <div data-tip="Deny">
+                <div data-tip="Deny" onClick={handleDenyAppointment}>
                   <IoMdClose className="text-xl text-gray-600" />
                 </div>
               </>
@@ -131,7 +159,7 @@ const Appointments = () => {
               </div>
             )}
 
-            {user.role !== "admin" && (
+            {user.role === "admin" && (
               <div data-tip="Delete" onClick={() => handleDeleteUser(id)}>
                 <RiDeleteBin6Line className="text-xl text-red-500" />
               </div>

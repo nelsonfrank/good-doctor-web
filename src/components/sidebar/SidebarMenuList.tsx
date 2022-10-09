@@ -1,7 +1,7 @@
 import { FiLayout, FiUsers, FiGitPullRequest } from "react-icons/fi";
 
 export const sidebarMenuFn = (rolePath: string) =>
-  rolePath === "admin"
+  rolePath !== "admin"
     ? [
         {
           name: "Dashboard",

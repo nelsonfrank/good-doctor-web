@@ -40,6 +40,31 @@ export const appointmentRouter = createProtectedRouter()
       return deletedAppointment;
     },
   })
+  .mutation("update", {
+    input: z.object({ id: z.string(), status: z.string() }),
+    async resolve({ ctx, input }) {
+      const { id, status } = input;
+      const appointment = await ctx.prisma.appointment.findUnique({
+        where: { id },
+      });
+
+      if (!appointment) {
+        throw new trpc.TRPCError({
+          code: "CONFLICT",
+          message: "appointment doesn't exists.",
+        });
+      }
+
+      const deletedAppointment = await ctx.prisma.appointment.update({
+        where: { id },
+        data: {
+          status
+        }
+      });
+
+      return deletedAppointment;
+    },
+  })
   .query("byId", {
     input: z.object({ id: z.string(), role: z.string() }),
     async resolve({ ctx, input }) {
