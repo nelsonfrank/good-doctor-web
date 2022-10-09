@@ -81,7 +81,7 @@ const Header = () => {
                   }
                   position="bottom center"
                 >
-                  <div className="flex w-36 flex-col rounded-md border border-gray-500 px-4 py-4 text-center shadow-lg">
+                  <div className="flex w-36 flex-col rounded-md border border-gray-500 bg-white px-4 py-4 text-center shadow-lg">
                     <button
                       className="my-2 border-b border-gray-500"
                       onClick={handleNavigatToDashboard}

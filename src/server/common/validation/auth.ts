@@ -13,7 +13,7 @@ export const patientSignUpSchema = loginSchema.extend({
 
 export const doctorSignUpSchema = loginSchema.extend({
   fullName: z.string(),
-  specialization: z.string(),
+  specialization: z.object({ value: z.string(), label: z.string() }),
   workPlace: z.string(),
   description: z.string(),
 });

@@ -10,22 +10,7 @@ import { loginSchema } from "../../../server/common/validation/auth";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
-  callbacks: {
-    jwt: async ({ token, user }) => {
-      if (user) {
-        token.id = user.id;
-        token.user = user.role;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      if (token) {
-        session.id = token.id;
-      }
 
-      return session;
-    },
-  },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   pages: {
@@ -61,6 +46,23 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.user = user;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token) {
+        session.id = token.id;
+        session.user = token.user as typeof session.user;
+      }
+
+      return session;
+    },
+  },
   jwt: {
     maxAge: 2 * 24 * 30 * 60, // 2 days
   },

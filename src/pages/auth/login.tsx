@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Layout from "@/src/components/layout";
 import { signIn } from "next-auth/react";
@@ -9,6 +9,7 @@ interface LoginFormType {
   password: string;
 }
 const Login = () => {
+  const [signinError, setSigninError] = useState<string | undefined>();
   const {
     register,
     handleSubmit,
@@ -30,11 +31,10 @@ const Login = () => {
     });
 
     if (res?.url) {
-      console.log(res);
-      router.push(res?.url);
+      router.replace(res?.url);
     }
     if (res?.error) {
-      console.log(res?.error);
+      setSigninError(res?.error);
     }
   };
   return (
@@ -44,6 +44,14 @@ const Login = () => {
           <div className="my-8">
             <h1 className="text-center text-2xl font-semibold">Sign In</h1>
           </div>
+          {signinError && (
+            <div className="flex justify-center">
+              <p className="text-sm text-red-500">
+                {" "}
+                Email or password is incorrect
+              </p>
+            </div>
+          )}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="mx-auto flex w-96 flex-col items-center"

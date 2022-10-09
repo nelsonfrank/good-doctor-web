@@ -1,29 +1,33 @@
-import React from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import React, { useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import Layout from "@/src/components/layout";
 import Link from "next/link";
+import { IDoctorSignUp } from "@/src/server/common/validation/auth";
+import { useRouter } from "next/router";
+import { trpc } from "@/src/server/common/client/trpc";
 
-interface SignupFormType {
-  fullName: string;
-  specialization: { label: string; value: string };
-  workPlace: string;
-  description: string;
-  email: string;
-  password: string;
-}
 const DoctorRegistration = () => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<SignupFormType>();
+  } = useForm<IDoctorSignUp>();
 
-  const onSubmit: SubmitHandler<SignupFormType> = (data) => {
-    console.log(data);
-  };
+  const router = useRouter();
 
+  const { mutateAsync } = trpc.useMutation(["auth.signup.doctor"]);
+
+  const onSubmit = useCallback(
+    async (data: IDoctorSignUp) => {
+      const result = await mutateAsync(data);
+      if (result.status === 201) {
+        router.push("/auth/login");
+      }
+    },
+    [mutateAsync, router]
+  );
   return (
     <Layout>
       <div>

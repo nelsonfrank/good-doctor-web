@@ -36,6 +36,10 @@ CREATE TABLE "User" (
     "email" TEXT,
     "emailVerified" DATETIME,
     "password" TEXT NOT NULL,
+    "dot" DATETIME,
+    "specialization" TEXT,
+    "description" TEXT,
+    "workPlace" TEXT,
     "role" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "image" TEXT

@@ -21,7 +21,9 @@ const UserRegistration = () => {
     resolver: zodResolver(patientSignUpSchema),
   });
   const router = useRouter();
+
   const { mutateAsync } = trpc.useMutation(["auth.signup"]);
+
   const onSubmit = useCallback(
     async (data: IPatientrSignUp) => {
       const result = await mutateAsync(data);

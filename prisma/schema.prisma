@@ -52,6 +52,9 @@ model User {
     emailVerified DateTime?
     password      String
     dot           DateTime?
+    specialization String?
+    description    String?
+    workPlace      String?
     role          String
     status        String
     image         String?
