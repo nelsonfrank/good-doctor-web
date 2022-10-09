@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import SideMenu from "./side-menu";
 import Logo from "./logo";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Popup from "reactjs-popup";
+
+import { BiUser } from "react-icons/bi";
+import Spinner from "../spinner";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const [sideMenu, showSideMenu] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
   const closeSideMenu = (close: boolean) => {
     showSideMenu(close);
@@ -12,6 +19,22 @@ const Header = () => {
 
   const appliedTheme = "text-black";
   const appliedThemeIcon = "#000000";
+
+  const { data: session } = useSession();
+
+  const router = useRouter();
+
+  console.log(session);
+
+  const handleSignout = () => {
+    setIsLoading(true);
+    signOut();
+    setIsLoading(false);
+  };
+
+  const handleNavigatToDashboard = () => {
+    router.push("/dashboard/individual");
+  };
   return (
     <header>
       <section
@@ -41,13 +64,47 @@ const Header = () => {
               <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
                 <Link href="/search">Search</Link>
               </button>
-              <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
-                <Link href="/auth/register">Register</Link>
-              </button>
+              {!session && (
+                <button className="mx-8  text-lg font-medium text-gray focus:border-b-4 focus:border-purple-500">
+                  <Link href="/auth/register">Register</Link>
+                </button>
+              )}
 
-              <button className="mx-8 rounded-md bg-purple-500 px-8  py-2 text-lg font-medium text-white focus:border-b-4 focus:border-purple-500">
-                <Link href="/auth/login">Login</Link>
-              </button>
+              {session && session.user?.email ? (
+                <Popup
+                  trigger={
+                    <div className="mx-8 flex flex-col items-center">
+                      <button className="flex  h-12  w-12 items-center justify-center rounded-full border border-purple-500 text-lg font-medium text-purple-500">
+                        <BiUser />
+                      </button>
+                    </div>
+                  }
+                  position="bottom center"
+                >
+                  <div className="flex w-36 flex-col rounded-md border border-gray-500 px-4 py-4 text-center shadow-lg">
+                    <button
+                      className="my-2 border-b border-gray-500"
+                      onClick={handleNavigatToDashboard}
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      type="button"
+                      className="my-2 flex justify-center border-b border-gray-500"
+                      onClick={handleSignout}
+                    >
+                      {!loading ? "Logout" : <Spinner />}
+                    </button>
+                  </div>
+                </Popup>
+              ) : (
+                <button
+                  onClick={() => signIn()}
+                  className="mx-8 rounded-md bg-purple-500 px-8  py-2 text-lg font-medium text-white focus:border-b-4 focus:border-purple-500"
+                >
+                  Login
+                </button>
+              )}
             </ul>
             <div className="mt-0 flex justify-end md:hidden">
               <button

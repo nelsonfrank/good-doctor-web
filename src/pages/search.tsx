@@ -179,7 +179,7 @@ const Search = () => {
                 >
                   <a href="#">
                     <img
-                      src="/logo.svg"
+                      src={doctor.profile_pic}
                       alt="Card"
                       className="max-h-48 w-full rounded-t-lg"
                     />

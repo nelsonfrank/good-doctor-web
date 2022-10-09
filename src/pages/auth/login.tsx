@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Layout from "@/src/components/layout";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface LoginFormType {
   email: string;
@@ -13,8 +15,27 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormType>();
 
-  const onSubmit: SubmitHandler<LoginFormType> = (data) => {
-    console.log(data);
+  const router = useRouter();
+  const onSubmit: SubmitHandler<LoginFormType> = async ({
+    email,
+    password,
+  }) => {
+    const res = await signIn("credentials", {
+      email,
+      password,
+      // The page where you want to redirect to after a
+      // successful login
+      callbackUrl: `/dashboard/individual`,
+      redirect: false,
+    });
+
+    if (res?.url) {
+      console.log(res);
+      router.push(res?.url);
+    }
+    if (res?.error) {
+      console.log(res?.error);
+    }
   };
   return (
     <Layout>

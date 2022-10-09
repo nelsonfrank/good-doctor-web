@@ -1,27 +1,36 @@
-import React from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import React, { useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import Layout from "@/src/components/layout";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  patientSignUpSchema,
+  IPatientrSignUp,
+} from "@/src/server/common/validation/auth";
+import { trpc } from "@/src/server/common/client/trpc";
+import { useRouter } from "next/router";
 
-interface SignupFormType {
-  firstName: string;
-  lastName: string;
-  dot: Date;
-  email: string;
-  password: string;
-}
 const UserRegistration = () => {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<SignupFormType>();
-
-  const onSubmit: SubmitHandler<SignupFormType> = (data) => {
-    console.log(data);
-  };
+  } = useForm<IPatientrSignUp>({
+    resolver: zodResolver(patientSignUpSchema),
+  });
+  const router = useRouter();
+  const { mutateAsync } = trpc.useMutation(["auth.signup"]);
+  const onSubmit = useCallback(
+    async (data: IPatientrSignUp) => {
+      const result = await mutateAsync(data);
+      if (result.status === 201) {
+        router.push("/auth/login");
+      }
+    },
+    [mutateAsync, router]
+  );
   return (
     <Layout>
       <div>

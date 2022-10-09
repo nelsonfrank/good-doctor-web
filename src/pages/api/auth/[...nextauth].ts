@@ -1,30 +1,73 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-// import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { verify } from "argon2";
 
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
+import { loginSchema } from "../../../server/common/validation/auth";
 // import { env } from "../../../env/server.mjs";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.user = user.role;
       }
+      return token;
+    },
+    session({ session, token }) {
+      if (token) {
+        session.id = token.id;
+      }
+
       return session;
     },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: "/auth/login",
+  },
   providers: [
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
-    // ...add more providers here
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {},
+
+      async authorize(credentials) {
+        const creds = await loginSchema.parseAsync(credentials);
+
+        const user = await prisma.user.findFirst({
+          where: { email: creds.email },
+        });
+
+        if (!user) {
+          return null;
+        }
+
+        const isValidPassword = await verify(user.password, creds.password);
+
+        if (!isValidPassword) {
+          return null;
+        }
+        return {
+          id: user.id,
+          email: user.email,
+          fullName: user.name,
+          role: user.role,
+        };
+      },
+    }),
   ],
+  jwt: {
+    maxAge: 2 * 24 * 30 * 60, // 2 days
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.JWT_TOKEN_SECRET,
 };
 
 export default NextAuth(authOptions);

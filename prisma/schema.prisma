@@ -50,9 +50,24 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    password      String
+    dot           DateTime?
+    role          String
+    status        String
     image         String?
     accounts      Account[]
     sessions      Session[]
+}
+
+model Appointment {
+    id            String    @id @default(cuid())
+    appointmentDate String
+    patientCategory String
+    doctorId      Int
+    patientId     Int
+    category      String
+    description   String
+    status        String
 }
 
 model VerificationToken {

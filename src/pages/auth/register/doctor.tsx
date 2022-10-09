@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import Select, { ActionMeta } from "react-select";
+import Select from "react-select";
 import Layout from "@/src/components/layout";
 import Link from "next/link";
 
@@ -8,7 +8,7 @@ interface SignupFormType {
   fullName: string;
   specialization: { label: string; value: string };
   workPlace: string;
-  dot: Date;
+  description: string;
   email: string;
   password: string;
 }
@@ -24,17 +24,6 @@ const DoctorRegistration = () => {
     console.log(data);
   };
 
-  interface Option {
-    label: string;
-    value: string;
-  }
-  const handlePatientChage = (
-    option: Option | null,
-    actionMeta: ActionMeta<Option>
-  ) => {
-    console.log(option);
-    console.log(actionMeta);
-  };
   return (
     <Layout>
       <div>
@@ -149,15 +138,15 @@ const DoctorRegistration = () => {
               )}
             </div>
             <div className="my-6 flex w-full flex-col">
-              <label htmlFor="password" className="ml-1 mb-2 text-lg">
+              <label htmlFor="description" className="ml-1 mb-2 text-lg">
                 Description
               </label>
               <textarea
                 placeholder="Describe what you do based on your specialization"
                 className="mb-2 w-full rounded-md border border-gray-400 py-4 px-4  outline-none"
-                {...register("password", { required: true })}
+                {...register("description", { required: true })}
               />
-              {errors.password && (
+              {errors.description && (
                 <span className="text-sm text-red-500">
                   This field is required
                 </span>
