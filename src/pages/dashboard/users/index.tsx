@@ -7,6 +7,8 @@ import Table from "@/src/components/table";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbUserOff, TbUserCheck } from "react-icons/tb";
 import { GrFormView } from "react-icons/gr";
+import { trpc } from "@/src/server/common/client/trpc";
+import { IUser } from "@/src/server/common/validation/auth";
 
 type Person = {
   userId: number;
@@ -40,11 +42,11 @@ const defaultData: Person[] = [
   },
 ];
 
-const handleDeleteUser = (userId: number) => {
+const handleDeleteUser = (userId: string) => {
   console.log(userId);
   console.log("user deleted");
 };
-const columnHelper = createColumnHelper<Person>();
+const columnHelper = createColumnHelper<any>();
 
 const columns = [
   columnHelper.accessor("name", {
@@ -82,7 +84,7 @@ const columns = [
       );
     },
   }),
-  columnHelper.accessor("userId", {
+  columnHelper.accessor("id", {
     header: () => <span className="mr-4 text-sm font-semibold">Actions</span>,
     cell: (info) => {
       const id = info.getValue();
@@ -113,6 +115,17 @@ const columns = [
 ];
 const Users = () => {
   const [data] = React.useState(() => [...defaultData]);
+
+  const users = trpc.useQuery(["user.users"]);
+  const allUsers = users
+    ? users.data?.map((user) => ({
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      }))
+    : [];
+  console.log(allUsers);
   return (
     <Layout>
       <div className="mt-10">
@@ -123,7 +136,7 @@ const Users = () => {
             </div>
           </div>
 
-          <Table data={data} columns={columns} />
+          <Table data={allUsers} columns={columns} />
         </div>
       </div>
     </Layout>

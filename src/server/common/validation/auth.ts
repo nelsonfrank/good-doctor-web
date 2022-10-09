@@ -20,15 +20,16 @@ export const doctorSignUpSchema = loginSchema.extend({
 
 
 export const userSchema = z.object({
+  id: z.nullable(z.string()),
   name: z.string(),
   email: z.string(),
-  dot: z.date(),
-  specialization: z.string(),
-  description: z.string(),
-  workPlace: z.string(),
+  dot: z.nullable(z.date()),
+  specialization: z.nullable(z.string()),
+  description: z.nullable(z.string()),
+  workPlace: z.nullable(z.string()),
   role: z.string(),
   status: z.string(),
-  image: z.string(),
+  image: z.nullable(z.string()),
 });
 
 export const signUpSchema = z.union([patientSignUpSchema, doctorSignUpSchema]);

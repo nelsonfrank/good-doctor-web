@@ -8,8 +8,8 @@ import {
 } from "@tanstack/react-table";
 
 interface TableProps<D, C extends ColumnDef<D, any>[]> {
-  data: D[];
-  columns: C;
+  data: any;
+  columns: any;
 }
 
 function Table<D, C extends ColumnDef<D, any>[]>({

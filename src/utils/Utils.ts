@@ -8,3 +8,14 @@ export const formatDateString = (date: string) => {
     day: "numeric",
   });
 };
+
+export function excludePrismaFields<IUser, Key extends keyof IUser>(
+  user: IUser,
+  ...keys: Key[]
+): Omit<IUser, Key> {
+  // eslint-disable-next-line prefer-const
+  for (let key of keys) {
+    delete user[key];
+  }
+  return user;
+}
