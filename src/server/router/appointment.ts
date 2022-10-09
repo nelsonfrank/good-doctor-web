@@ -1,6 +1,7 @@
 import { appointmentSchema } from "../common/validation/appointment";
 import { createProtectedRouter } from "./context";
 import { z } from "zod";
+import * as trpc from "@trpc/server";
 
 export const appointmentRouter = createProtectedRouter()
   .mutation("create", {
@@ -17,10 +18,26 @@ export const appointmentRouter = createProtectedRouter()
       return appointment;
     },
   })
-  .query("delete", {
-    resolve({ ctx }) {
-      console.log(ctx.prisma);
-      return "He who asks a question is a fool for five minutes; he who does not ask a question remains a fool forever.";
+  .mutation("delete", {
+    input: z.object({ id: z.string() }),
+    async resolve({ ctx, input }) {
+      const { id } = input;
+      const appointment = await ctx.prisma.appointment.findUnique({
+        where: { id },
+      });
+
+      if (!appointment) {
+        throw new trpc.TRPCError({
+          code: "CONFLICT",
+          message: "appointment doesn't exists.",
+        });
+      }
+
+      const deletedAppointment = await ctx.prisma.appointment.delete({
+        where: { id },
+      });
+
+      return deletedAppointment;
     },
   })
   .query("byId", {

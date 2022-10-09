@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { IUser } from "@/src/server/common/validation/auth";
 
 type Appointment = {
+  id: string;
   appointrmentId: string;
   status: "pending" | "accepted" | "denied";
   doctorId: string;
@@ -28,9 +29,6 @@ type Appointment = {
   patientId: string;
 };
 
-const handleDeleteUser = (id: string) => {
-  console.log(id);
-};
 const Appointments = () => {
   const router = useRouter();
 
@@ -38,7 +36,7 @@ const Appointments = () => {
 
   const columnHelper = createColumnHelper<Appointment>();
 
-  const columns = (user: IUser, trpcInstance: typeof trpc) => [
+  const columns = (user: IUser) => [
     columnHelper.accessor("appointmentDate", {
       cell: (info) => <span>{formatDateString(info.getValue())}</span>,
       header: () => (
@@ -47,12 +45,20 @@ const Appointments = () => {
     }),
     columnHelper.accessor("doctorId", {
       id: "doctorId",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => {
+        const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
+        console.log(user);
+        return <span>Dr.{user.data?.name}</span>;
+      },
       header: () => <span className="mr-4 text-sm font-semibold">Doctor</span>,
     }),
     columnHelper.accessor("patientId", {
       id: "patientId",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => {
+        const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
+        console.log(user);
+        return <span>{user.data?.name}</span>;
+      },
       header: () => <span className="mr-4 text-sm font-semibold">Patient</span>,
     }),
     columnHelper.accessor("category", {
@@ -90,11 +96,18 @@ const Appointments = () => {
         );
       },
     }),
-    columnHelper.accessor("appointrmentId", {
+    columnHelper.accessor("id", {
       header: () => <span className="mr-4 text-sm font-semibold">Actions</span>,
       cell: (info) => {
         const id = info.getValue();
         const status = info.row.getValue("status");
+        console.log(user);
+        const { mutateAsync } = trpc.useMutation(["appointment.delete"]);
+
+        const handleDeleteUser = (id: string) => {
+          const deleteItem = mutateAsync({ id: String(id) });
+          console.log(deleteItem);
+        };
         return (
           <div className="flex justify-center gap-6">
             {user.role === "doctor" && (
@@ -107,7 +120,7 @@ const Appointments = () => {
                 </div>
               </>
             )}
-            {user.role === "doctor" && (
+            {user.role === "patients" && status === "accepted" && (
               <div className="flex justify-center text-xs lg:text-sm">
                 <span
                   className={`flex max-w-fit items-center rounded-xl bg-active py-1 px-2 text-active-deep`}
@@ -118,7 +131,7 @@ const Appointments = () => {
               </div>
             )}
 
-            {user.role === "admin" && (
+            {user.role !== "admin" && (
               <div data-tip="Delete" onClick={() => handleDeleteUser(id)}>
                 <RiDeleteBin6Line className="text-xl text-red-500" />
               </div>
@@ -136,15 +149,26 @@ const Appointments = () => {
     }
   }, [router, session]);
 
-  let response: any;
-  if (session?.user) {
-    response = trpc.useQuery([
-      "appointment.byId",
-      { id: session?.user.id, role: session.user.role },
-    ]);
-  }
+  const [userId, setUserId] = useState<string>("");
+  const [userRole, setUserRole] = useState<string>("");
 
-  console.log(response);
+  useEffect(() => {
+    if (session?.user) {
+      const user = session.user;
+      setUserId(user.id);
+      setUserRole(user.role);
+    }
+
+    return () => {
+      setUserId("");
+      setUserRole("");
+    };
+  }, [session?.user]);
+
+  const response = trpc.useQuery([
+    "appointment.byId",
+    { id: String(userId), role: String(userRole) },
+  ]);
 
   const data = response && response.data ? response.data : [];
 
@@ -159,12 +183,13 @@ const Appointments = () => {
           </div>
 
           {session?.user && (
-            <Table data={data} columns={columns(session?.user, trpc)} />
+            <Table data={data} columns={columns(session?.user)} />
           )}
         </div>
       </div>
     </Layout>
   );
 };
+
 
 export default Appointments;
