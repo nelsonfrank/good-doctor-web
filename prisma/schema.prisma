@@ -64,12 +64,12 @@ model User {
 
 model Appointment {
     id            String    @id @default(cuid())
-    appointmentDate String
+    appointmentDate String?
     patientCategory String
-    doctorId      Int
-    patientId     Int
+    doctorId     String
+    patientId    String
     category      String
-    description   String
+    description   String?
     status        String
 }
 

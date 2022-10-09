@@ -9,6 +9,7 @@ import type { AppRouter } from "../server/router";
 import type { Session } from "next-auth";
 import "../styles/globals.css";
 import "react-datepicker/dist/react-datepicker.css";
+import "reactjs-popup/dist/index.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

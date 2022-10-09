@@ -116,7 +116,7 @@ const columns = [
 const Users = () => {
   const [data] = React.useState(() => [...defaultData]);
 
-  const users = trpc.useQuery(["user.users"]);
+  const users = trpc.useQuery(["user.all"]);
   const allUsers = users
     ? users.data?.map((user) => ({
         name: user.name,

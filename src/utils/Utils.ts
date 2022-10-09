@@ -19,3 +19,9 @@ export function excludePrismaFields<IUser, Key extends keyof IUser>(
   }
   return user;
 }
+
+
+export const randomAvatarImg = (data: any[]): string => {
+  const index = Math.floor(Math.random() * 30);
+  return data[index].profile_pic;
+};
