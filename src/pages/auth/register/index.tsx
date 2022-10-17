@@ -135,7 +135,7 @@ const UserRegistration = () => {
               </label>
               <input
                 type="password"
-                placeholder="Email"
+                placeholder="Password"
                 className="mb-2 w-full rounded-md border border-gray-400 py-4 px-4 text-lg outline-none"
                 {...register("password", { required: true })}
               />
