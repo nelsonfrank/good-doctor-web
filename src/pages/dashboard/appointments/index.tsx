@@ -10,7 +10,6 @@ import { IoMdClose } from "react-icons/io";
 import { formatDateString } from "@/src/utils/Utils";
 import { trpc } from "@/src/server/common/client/trpc";
 import { useSession } from "next-auth/react";
-import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 import { IUser } from "@/src/server/common/validation/auth";
 
@@ -53,17 +52,15 @@ const Appointments = () => {
       },
       header: () => <span className="mr-4 text-sm font-semibold">Doctor</span>,
     }),
-      columnHelper.accessor("patientId", {
-        id: "patientId",
-        cell: (info) => {
-          const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
+    columnHelper.accessor("patientId", {
+      id: "patientId",
+      cell: (info) => {
+        const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
 
-          return <span>{user.data?.name}</span>;
-        },
-        header: () => (
-          <span className="mr-4 text-sm font-semibold">Patient</span>
-        ),
-      });,
+        return <span>{user.data?.name}</span>;
+      },
+      header: () => <span className="mr-4 text-sm font-semibold">Patient</span>,
+    }),
     columnHelper.accessor("category", {
       id: "category",
       cell: (info) => <span>{info.getValue()}</span>,
@@ -126,14 +123,7 @@ const Appointments = () => {
           },
         });
         const handleDeleteUser = (id: string) => {
-          const deleteItem = mutateAsync(
-            { id: String(id) },
-            {
-              onSuccess: () => {
-                queryCache.invalidateQueries([]);
-              },
-            }
-          );
+          const deleteItem = mutateAsync({ id: String(id) });
         };
 
         const handleAcceptAppointment = () => {
