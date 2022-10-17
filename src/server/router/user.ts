@@ -1,7 +1,7 @@
-import { createProtectedRouter } from "./context";
+import { createRouter } from "./context";
 import { z } from "zod";
 
-export const userRouter = createProtectedRouter()
+export const userRouter = createRouter()
   .query("getSession", {
     resolve({ ctx }) {
       return ctx.session;

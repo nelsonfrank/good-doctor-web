@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Select, { ActionMeta } from "react-select";
 import DatePicker from "react-datepicker";
@@ -35,7 +34,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Header />
-      <main className="container relative mx-auto p-4">
+      <main className="container relative mx-auto min-h-screen p-4">
         <div className="mb-24 flex">
           <div className="w-1/2 pt-24 pl-24">
             <h1 className="my-16 font-header text-6xl font-bold leading-snug ">
@@ -57,8 +56,8 @@ const Home: NextPage = () => {
             />
           </div>
         </div>
-        <div className="absolute ml-16 mt-8 rounded-lg bg-white py-8 px-8 shadow-md">
-          <div>
+        <div className="absolute ml-16  ">
+          <div className="rounded-lg bg-white py-8 px-8 shadow-md">
             <div className="flex items-center ">
               <h2 className="mr-4 font-text text-2xl font-medium">
                 Book Appointment Now
@@ -167,12 +166,24 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
+          <div className="mt-60  mb-16 ml-10 w-full">
+            <div className="flex flex-col items-center">
+              <h2 className="mb-8 text-center text-4xl font-medium text-gray-700">
+                Are you a doctor interested to join good doctor app
+              </h2>
+
+              <button
+                className="w-1/3 rounded-md bg-purple-500 py-4 px-12 text-center text-white"
+                onClick={() => router.push("/auth/register/doctor")}
+              >
+                Signup here
+              </button>
+            </div>
+          </div>
         </div>
-        <div></div>
       </main>
     </>
   );
 };
 
 export default Home;
-

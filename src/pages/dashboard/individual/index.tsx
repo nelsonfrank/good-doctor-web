@@ -14,7 +14,7 @@ const IndividualDashbaord = () => {
       <div className="container mx-auto">
         <h2 className="text-center text-3xl font-medium">Patient dashbaord</h2>
 
-        <h2 className="text-center text-xl font-medium">
+        <h2 className="my-4 text-center text-xl font-medium">
           Welcome {session?.user?.name}
         </h2>
         <div className="mt-24 flex justify-center gap-10">

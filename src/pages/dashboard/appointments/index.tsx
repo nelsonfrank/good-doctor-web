@@ -48,20 +48,22 @@ const Appointments = () => {
       id: "doctorId",
       cell: (info) => {
         const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
-        console.log(user);
+
         return <span>Dr.{user.data?.name}</span>;
       },
       header: () => <span className="mr-4 text-sm font-semibold">Doctor</span>,
     }),
-    columnHelper.accessor("patientId", {
-      id: "patientId",
-      cell: (info) => {
-        const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
-        console.log(user);
-        return <span>{user.data?.name}</span>;
-      },
-      header: () => <span className="mr-4 text-sm font-semibold">Patient</span>,
-    }),
+      columnHelper.accessor("patientId", {
+        id: "patientId",
+        cell: (info) => {
+          const user = trpc.useQuery(["user.byId", { id: info.getValue() }]);
+
+          return <span>{user.data?.name}</span>;
+        },
+        header: () => (
+          <span className="mr-4 text-sm font-semibold">Patient</span>
+        ),
+      });,
     columnHelper.accessor("category", {
       id: "category",
       cell: (info) => <span>{info.getValue()}</span>,
@@ -102,7 +104,7 @@ const Appointments = () => {
       cell: (info) => {
         const id = info.getValue();
         const status = info.row.getValue("status");
-        console.log(user);
+
         const { mutateAsync } = trpc.useMutation(["appointment.delete"], {
           onSuccess(input) {
             utils.invalidateQueries(["appointment.all"]);
@@ -115,6 +117,7 @@ const Appointments = () => {
 
         const mut = trpc.useMutation(["appointment.update"], {
           onSuccess(input) {
+            console.log("input");
             utils.invalidateQueries(["appointment.all"]);
             utils.invalidateQueries([
               "appointment.byId",
@@ -123,18 +126,22 @@ const Appointments = () => {
           },
         });
         const handleDeleteUser = (id: string) => {
-          const deleteItem = mutateAsync({ id: String(id) });
-          console.log(deleteItem);
+          const deleteItem = mutateAsync(
+            { id: String(id) },
+            {
+              onSuccess: () => {
+                queryCache.invalidateQueries([]);
+              },
+            }
+          );
         };
 
         const handleAcceptAppointment = () => {
           const val = mut.mutateAsync({ id, status: "accepted" });
-          console.log(val);
         };
 
         const handleDenyAppointment = () => {
           const res = mut.mutateAsync({ id, status: "denied" });
-          console.log(res);
         };
         return (
           <div className="flex justify-center gap-6">

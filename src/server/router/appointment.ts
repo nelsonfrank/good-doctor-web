@@ -1,9 +1,9 @@
 import { appointmentSchema } from "../common/validation/appointment";
-import { createProtectedRouter } from "./context";
+import { createRouter } from "./context";
 import { z } from "zod";
 import * as trpc from "@trpc/server";
 
-export const appointmentRouter = createProtectedRouter()
+export const appointmentRouter = createRouter()
   .mutation("create", {
     input: appointmentSchema,
     async resolve({ ctx, input }) {
@@ -58,8 +58,8 @@ export const appointmentRouter = createProtectedRouter()
       const deletedAppointment = await ctx.prisma.appointment.update({
         where: { id },
         data: {
-          status
-        }
+          status,
+        },
       });
 
       return deletedAppointment;
